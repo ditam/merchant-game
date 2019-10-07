@@ -345,11 +345,13 @@ $(function() {
       return;
     }
     inventory[productIndex] += 1;
+    towns[currentTown].stockpiles[productIndex] -= 1;
     money -= price;
     if (soundsOn) {
       moneySound.play();
     }
     renderInventory(products, inventory, money);
+    renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
   });
   
   // Hide dialogs on clicking
