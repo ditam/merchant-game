@@ -96,7 +96,7 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
 function showMessage(text) {
   const container = $('#message-container');
   container.empty();
-  container.text(text);
+  container.append($('<div>').addClass('content').text(text));
   container.append($('<div>').addClass('hint').text('Click to dismiss'));
   container.addClass('visible');
 }
