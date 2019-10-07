@@ -66,8 +66,10 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
   const icon = $('<img>').attr('src', 'assets/icons/town' + town.type + '.png');
   container.append(icon);
   
-  const title = $('<div>').text('Welcome to ' + townName + '!');
+  const title = $('<div>').text('Welcome to ');
   container.append(title);
+  const nameLabel = $('<div>').text(townName).addClass('town-name');
+  container.append(nameLabel);
   
   const table = $('<table>');
   const header = $('<tr><th></th><th>Available</th><th>Price</th><th>Sell</th><th>Buy</th></tr>');
