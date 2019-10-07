@@ -27,7 +27,6 @@ function renderInventory(products, inventory, currentMoney) {
 function renderPricesTable(towns, products, prices) {
   const table = $('#prices-container table');
   table.empty();
-  console.log('renedering table:', table);
   
   // add header row
   const headerRow = $('<tr>');
@@ -59,7 +58,6 @@ function renderPricesTable(towns, products, prices) {
 }
 
 function renderTradeDialog(townName, town, products, pricesInTown) {
-  console.log(town, products, pricesInTown);
   const container = $('#trade-container');
   container.empty();
   
@@ -99,6 +97,18 @@ function showMessage(text) {
   container.append($('<div>').addClass('content').text(text));
   container.append($('<div>').addClass('hint').text('Click to dismiss'));
   container.addClass('visible');
+}
+
+function rot(inventory, products, distance) {
+  for (let i=0; i<inventory.length; i++) {
+    product = products[i];
+    if (product.rots) {
+      const rotFactor = distance/product.timeToRot;
+      const rotCount = Math.ceil(rotFactor*inventory[i]);
+      inventory[i] -= rotCount;
+      inventory[i+1] += rotCount;
+    }
+  }
 }
 
 $(function() {
@@ -168,8 +178,8 @@ $(function() {
     {
       name: 'apples',
       icon: 'apple',
-      transformsTo: '1b',
-      timeToSpoil: 8,
+      rots: true,
+      timeToRot: 8,
       minPrice: 1,
       maxPrice: 5
     },
@@ -182,8 +192,8 @@ $(function() {
     {
       name: 'pears',
       icon: 'pear',
-      transformsTo: '2b',
-      timeToSpoil: 7,
+      rots: true,
+      timeToRot: 7,
       minPrice: 2,
       maxPrice: 5
     },
@@ -196,8 +206,8 @@ $(function() {
     {
       name: 'plums',
       icon: 'plum',
-      transformsTo: '3b',
-      timeToSpoil: 5,
+      rots: true,
+      timeToRot: 5,
       minPrice: 2,
       maxPrice: 7
     },
@@ -210,8 +220,8 @@ $(function() {
     {
       name: 'bananas',
       icon: 'banana',
-      transformsTo: '4b',
-      timeToSpoil: 4,
+      rots: true,
+      timeToRot: 4,
       minPrice: 5,
       maxPrice: 20
     },
@@ -224,8 +234,8 @@ $(function() {
     {
       name: 'oranges',
       icon: 'orange',
-      transformsTo: '5b',
-      timeToSpoil: 3,
+      rots: true,
+      timeToRot: 3,
       minPrice: 15,
       maxPrice: 40
     },
@@ -238,8 +248,8 @@ $(function() {
     {
       name: 'grapes',
       icon: 'grapes',
-      transformsTo: '6b',
-      timeToSpoil: 2,
+      rots: true,
+      timeToRot: 2,
       minPrice: 40,
       maxPrice: 99
     },
@@ -270,12 +280,16 @@ $(function() {
   // connect event handlers
   $('area').click(function() {
     const town = $(this);
+    const prevTown = currentTown;
     currentTown = town.data('name');
     // hide trade dialog if open
     $('#trade-container').removeClass('visible');
     // move the player marker for feedback
     player.css('top', getAreaPosition(town).top);
     player.css('left', getAreaPosition(town).left);
+    // rot inventory according to distance travelled
+    rot(inventory, products, Math.abs(towns[prevTown].distance - towns[currentTown].distance));
+    renderInventory(products, inventory, money);
   });
   
   $('#prices-button').click(function() {
@@ -317,10 +331,11 @@ $(function() {
   $('#trade-container').on('click', 'button.buy', function() {
     const productIndex = $(this).data('index');
     const price = prices[currentTown][productIndex];
-    if (inventoryIsFull()) {
-      showMessage('Inventory is full - can not buy.');
-      return;
-    }
+    // TODO: re-add inventory with travel methods
+    //if (inventoryIsFull()) {
+    //  showMessage('Inventory is full - can not buy.');
+    //  return;
+    //}
     if (money < price) {
       showMessage('You don\'t have enough money to buy.');
       return;
