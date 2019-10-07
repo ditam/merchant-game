@@ -8,6 +8,10 @@ function getAreaPosition(area) {
   };
 }
 
+function getRandomIntFromInterval(min, max) { // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 function renderInventory(products, inventory, currentMoney) {
   const inventoryTable = $('#inventory');
   inventoryTable.empty();
@@ -91,10 +95,13 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
   container.append(footer);
 }
 
-function showMessage(text) {
+function showMessage(text, secondary) {
   const container = $('#message-container');
   container.empty();
   container.append($('<div>').addClass('content').text(text));
+  if (secondary) {
+    container.append($('<div>').addClass('content secondary').text(secondary));
+  }
   container.append($('<div>').addClass('hint').text('Click to dismiss'));
   container.addClass('visible');
 }
@@ -108,6 +115,30 @@ function rot(inventory, products, distance) {
       inventory[i] -= rotCount;
       inventory[i+1] += rotCount;
     }
+  }
+}
+
+function increaseStockpiles(towns, products, prices) {
+  for (name in towns) {
+    const town = towns[name];
+    for (let i=0; i<products.length; i++) {
+      if (Math.random() > 0.1) {
+        town.stockpiles[i] += 2;
+        prices[name][i] = getRandomIntFromInterval(products[i].minPrice, products[i].maxPrice);
+      }
+    }
+  }
+}
+
+function checkVictory(inventory, money) {
+  if (
+    inventory.every(function(val) {
+      return val>0;
+    })
+    &&
+    money >= 1000
+  ) {
+    showMessage('Congratulations, you are victorious!');
   }
 }
 
@@ -125,8 +156,8 @@ $(function() {
   // shared state and references
   let soundsOn = false;
   const player = $('#player');
-  let money = 100;
-  const inventory = [4,0,4,0,0,0,0,0,0,0,0,0];
+  let money = 0;
+  const inventory = [0,0,0,0,0,0,0,0,0,0,0,0];
   const inventory_size = 5;
   function inventoryIsFull() { return inventory.reduce(function(sum, v) {return sum+v;}, 0) >= inventory_size }
   let currentTown = 'Edgemoor';
@@ -290,6 +321,7 @@ $(function() {
     // rot inventory according to distance travelled
     rot(inventory, products, Math.abs(towns[prevTown].distance - towns[currentTown].distance));
     renderInventory(products, inventory, money);
+    increaseStockpiles(towns, products, prices);
   });
   
   $('#prices-button').click(function() {
@@ -322,11 +354,14 @@ $(function() {
       return;
     }
     inventory[productIndex] -= 1;
+    towns[currentTown].stockpiles[productIndex] -= 1;
     money += price;
     if (soundsOn) {
       moneySound.play();
     }
     renderInventory(products, inventory, money);
+    renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
+    checkVictory(inventory, money);
   });
   $('#trade-container').on('click', 'button.buy', function() {
     const productIndex = $(this).data('index');
@@ -352,6 +387,7 @@ $(function() {
     }
     renderInventory(products, inventory, money);
     renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
+    checkVictory(inventory, money);
   });
   
   // Hide dialogs on clicking
@@ -366,5 +402,5 @@ $(function() {
   });
   
   // display opening message
-  showMessage('Welcome, this is a message for you.\nClick on your banner to start trading.');
+  showMessage('Welcome! I heard you want to become a trader, but you don\'t have any money or anything to sell! Well... good luck, kiddo! I hear in Lorevale they are throwing away rotten apples, maybe you can become a rotten apple salesman! Ha-ha.', 'When in town, click on your banner to trade.');
 });

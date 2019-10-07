@@ -162,6 +162,17 @@ area {
   padding: 25px;
 }
 
+#message-container .content.secondary {
+  top: 150px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  font-size: 22px;
+  padding: 25px;
+  font-style: italic;
+}
+
 #player {
   transition-duration: 1s;
   
