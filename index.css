@@ -87,6 +87,19 @@ area {
   width: 64px;
   height: 64px;
 }
+#trade-container .footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+
+  height: 32px;
+  line-height: 32px;
+  border-top: 1px solid gray;
+
+  cursor: pointer;
+}
 
 #player {
   transition-duration: 1s;

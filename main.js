@@ -75,6 +75,9 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
   }
   
   container.append(table);
+
+  const footer = $('<div>').addClass('footer').text('Leave town');
+  container.append(footer);
 }
 
 function showMessage(text) {
@@ -313,6 +316,9 @@ $(function() {
   });
   $('#message-container').click(function() {
     $('#message-container').removeClass('visible');
+  });
+  $('#trade-container').on('click', '.footer', function() {
+    $('#trade-container').removeClass('visible');
   });
   
   // display opening message
