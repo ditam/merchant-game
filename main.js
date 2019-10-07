@@ -122,11 +122,11 @@ function increaseStockpiles(towns, products, prices) {
   for (name in towns) {
     const town = towns[name];
     for (let i=0; i<products.length; i++) {
-      if (Math.random() > 0.05) {
+      if (Math.random() < 0.1) {
         town.stockpiles[i] += 1;
         prices[name][i] = getRandomIntFromInterval(products[i].minPrice, products[i].maxPrice);
       }
-      if (Math.random() > 0.005) {
+      if (Math.random() < 0.005) {
         town.stockpiles[i] = 0;
         prices[name][i] = products[i].maxPrice;
       }
