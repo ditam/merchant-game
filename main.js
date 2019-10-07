@@ -8,7 +8,7 @@ function getAreaPosition(area) {
   };
 }
 
-function renderInventory(products, inventory) {
+function renderInventory(products, inventory, currentMoney) {
   const inventoryTable = $('#inventory');
   inventoryTable.empty();
   const headerRow = $('<tr>');
@@ -19,6 +19,8 @@ function renderInventory(products, inventory) {
   }
   inventoryTable.append(headerRow);
   inventoryTable.append(valuesRow);
+
+  $('#money-container #counter').text(currentMoney);
 }
 
 function renderPricesTable(towns, products, prices) {
@@ -129,6 +131,11 @@ $(function() {
       type: 2,
       stockpiles: [80,10,70,50,0,50,0,3,0,3,0,3]
     },
+    Blelridge: {
+      distance: 1,
+      type: 2,
+      stockpiles: [10,10,10,50,0,20,2,2,2,1,0,0]
+    },
     Sagewynne: {
       distance: 2,
       type: 3,
@@ -223,12 +230,13 @@ $(function() {
     Wildeash:  [3,1,4,1,5,3,10,4,20,8,40,20],
     Cliffholt: [3,1,4,1,5,2,10,4,20,8,50,20],
     Janton:    [3,1,5,2,5,2,10,4,20,8,50,20],
+    Blelridge: [3,1,5,1,5,2,10,4,20,8,60,30],
     Sagewynne: [2,0,3,1,4,2,10,4,20,8,65,20],
     Ostmont:   [2,0,3,1,4,2,10,4,20,8,70,20]
   };
   
   // render initial inventory and prices table
-  renderInventory(products, inventory);
+  renderInventory(products, inventory, money);
   renderPricesTable(towns, products, prices);
   
   // connect event handlers
@@ -274,7 +282,7 @@ $(function() {
     if (soundsOn) {
       moneySound.play();
     }
-    renderInventory(products, inventory);
+    renderInventory(products, inventory, money);
   });
   $('#trade-container').on('click', 'button.buy', function() {
     const productIndex = $(this).data('index');
@@ -287,12 +295,16 @@ $(function() {
       showMessage('You don\'t have enough money to buy.');
       return;
     }
+    if (towns[currentTown].stockpiles[productIndex] <= 0) {
+      showMessage('0 units in town - can not buy.');
+      return;
+    }
     inventory[productIndex] += 1;
     money -= price;
     if (soundsOn) {
       moneySound.play();
     }
-    renderInventory(products, inventory);
+    renderInventory(products, inventory, money);
   });
   
   // Hide dialogs on clicking
