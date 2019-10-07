@@ -74,7 +74,7 @@ area {
 
 
 #prices-container table {
-  font-size: 24px;
+  font-size: 20px;
 }
 #prices-container table tr:nth-child(2n) {
   background-color: #ccc;
@@ -82,7 +82,15 @@ area {
 #prices-container table td, #prices-container table th {
   padding: 0 5px;
 }
-
+#prices-container table tr:first-child {
+  height: 200px;
+  white-space: nowrap;
+  font-size: 18px;
+}
+#prices-container th > div {
+  transform: translate(0, 65px) rotate(-45deg);
+  width: 30px;
+}
 #trade-container img {
   width: 64px;
   height: 64px;

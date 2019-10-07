@@ -14,7 +14,8 @@ function renderInventory(products, inventory, currentMoney) {
   const headerRow = $('<tr>');
   const valuesRow = $('<tr>');
   for (let i=0; i<products.length; i++) {
-    headerRow.append($('<th>').text(products[i].name)); // TODO: should be icon
+    const icon = $('<img>').attr('src', 'assets/icons/' + products[i].icon + '.png').css('width', '16px').css('height', '16px');
+    headerRow.append($('<th>').append(icon));
     valuesRow.append($('<td>').text(inventory[i]));
   }
   inventoryTable.append(headerRow);
@@ -30,9 +31,17 @@ function renderPricesTable(towns, products, prices) {
   
   // add header row
   const headerRow = $('<tr>');
-  headerRow.append($('<th>').text('—'));
+  headerRow.append($('<th>'));
   for (let i=0;i<products.length;i++) {
-    const headerCell = $('<th>').text(products[i].name);
+    const label = $('<div>').text(products[i].name);
+    label.css('background-image', 'url(assets/icons/' + products[i].icon + '.png)');
+    label.css('background-repeat', 'no-repeat');
+    label.css('background-size', '16px');
+    label.css('background-position', '0');
+    label.css('padding-left', '25px');
+    label.css('margin-left', '-10px');
+    
+    const headerCell = $('<th>').append(label);
     headerRow.append(headerCell);
   }
   table.append(headerRow);
@@ -61,12 +70,14 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
   container.append(title);
   
   const table = $('<table>');
-  const header = $('<tr><th>Available</th><th>Price</th><th>Sell</th><th>Buy</th></tr>');
+  const header = $('<tr><th></th><th>Available</th><th>Price</th><th>Sell</th><th>Buy</th></tr>');
   table.append(header);
   
   // generate rows for fruits
   for (let i=0; i<products.length; i++) {
     const row = $('<tr>');
+    const icon = $('<img>').attr('src', 'assets/icons/' + products[i].icon + '.png').css('width', '16px').css('height', '16px');
+    row.append($('<td>').append(icon));
     row.append($('<td>').text(town.stockpiles[i]));
     row.append($('<td>').text(pricesInTown[i]));
     row.append($('<td>').append($('<button>').addClass('sell').text('-1').data('index', i)));
@@ -153,74 +164,86 @@ $(function() {
   
   const products = [
     {
-      name: '1a',
+      name: 'apples',
+      icon: 'apple',
       transformsTo: '1b',
       timeToSpoil: 8,
       minPrice: 1,
       maxPrice: 5
     },
     {
-      name: '1b',
+      name: 'apples (bruised)',
+      icon: 'apple_rot',
       minPrice: 0,
       maxPrice: 2
     },
     {
-      name: '2a',
+      name: 'pears',
+      icon: 'pear',
       transformsTo: '2b',
       timeToSpoil: 7,
       minPrice: 2,
       maxPrice: 5
     },
     {
-      name: '2b',
+      name: 'pears (bruised)',
+      icon: 'pear_rot',
       minPrice: 0,
       maxPrice: 3
     },
     {
-      name: '3a',
+      name: 'plums',
+      icon: 'plum',
       transformsTo: '3b',
       timeToSpoil: 5,
       minPrice: 2,
       maxPrice: 7
     },
     {
-      name: '3b',
+      name: 'plums (rotten)',
+      icon: 'plum_rot',
       minPrice: 1,
       maxPrice: 5
     },
     {
-      name: '4a',
+      name: 'bananas',
+      icon: 'banana',
       transformsTo: '4b',
       timeToSpoil: 4,
       minPrice: 5,
       maxPrice: 20
     },
     {
-      name: '4b',
+      name: 'bananas (bruised)',
+      icon: 'banana_rot',
       minPrice: 1,
       maxPrice: 8
     },
     {
-      name: '5a',
+      name: 'oranges',
+      icon: 'orange',
       transformsTo: '5b',
       timeToSpoil: 3,
       minPrice: 15,
       maxPrice: 40
     },
     {
-      name: '5b',
+      name: 'oranges (bruised)',
+      icon: 'orange_rot',
       minPrice: 5,
       maxPrice: 10
     },
     {
-      name: '6a',
+      name: 'grapes',
+      icon: 'grapes',
       transformsTo: '6b',
       timeToSpoil: 2,
       minPrice: 40,
       maxPrice: 99
     },
     {
-      name: '6b',
+      name: 'grapes (rotten)',
+      icon: 'grapes_rot',
       minPrice: 5,
       maxPrice: 50
     },
