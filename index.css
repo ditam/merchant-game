@@ -1,4 +1,103 @@
 body {
   padding: 10px;
   background: #eee;
+  
+  user-select: none;
+}
+
+area {
+  cursor: pointer;
+}
+
+#main-container {
+  width: 1024px;
+  height: 576px;
+  position: relative;
+  overflow: hidden;
+}
+#main-container > img {
+  width: 100%;
+  height: 100%;
+}
+#main-container #prices-container {
+  position: absolute;
+  width: 900px;
+  height: 500px;
+  border: 1px solid black;
+  background-color: brown;
+  
+  left: 57px;
+  
+  top: 577px; /* out of view by default */
+  transition: top 0.5s ease;
+}
+#main-container #prices-container.visible {
+  top: 30px;
+}
+#main-container #message-container {
+  position: absolute;
+  width: 600px;
+  height: 300px;
+  border: 1px solid black;
+  background-color: brown;
+  
+  left: 215px;
+  cursor: pointer;
+    
+  top: 577px; /* out of view by default */
+  transition: top 0.2s ease;
+}
+#main-container #message-container.visible {
+  top: 140px;
+}
+#main-container #message-container .hint {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+}
+#main-container #trade-container {
+  position: absolute;
+  width: 300px;
+  height: 450px;
+  border: 1px solid black;
+  background-color: brown;
+  
+  left: 350px;
+    
+  top: 577px; /* out of view by default */
+  transition: top 0.5s ease;
+}
+#main-container #trade-container.visible {
+  top: 60px;
+}
+
+
+#prices-container table {
+  font-size: 24px;
+}
+#prices-container table tr:nth-child(2n) {
+  background-color: #ccc;
+}
+#prices-container table td, #prices-container table th {
+  padding: 0 5px;
+}
+
+#trade-container img {
+  width: 64px;
+  height: 64px;
+}
+
+#player {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border: 1px solid black;
+  transition-duration: 1s;
+  
+  cursor: pointer;
+  
+  position: absolute;
+  top: 100px; /* starting town coords, could be dynamic */
+  left: 100px;
 }

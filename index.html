@@ -8,10 +8,36 @@
   <meta name="description" content="A small game made for Ludum Dare 45">
 
   <link rel="stylesheet" href="index.css">
+  <link rel="icon" type="image/png" href="assets/icons/favicon.png" sizes="16x16">
 </head>
 
 <body>
-  <div>Content.</div>
+  <div id="top-container">
+    <button id="prices-button">show prices</button>
+    <button id="mute-button">unmute</button>
+    <table id="inventory"></table>
+  </div>
+  <div id="main-container">
+    <img src="assets/images/map.png" width="1024" height="576" usemap="#main-map"/>
+    <map name="main-map">
+      <area shape="rect" coords="100,100,200,200" alt="Town 1" id="town1" data-name="Edgemoor">
+      <area shape="rect" coords="300,300,400,400" alt="Town 2" id="town2" data-name="Lorvale">
+      <area shape="rect" coords="700,200,800,300" alt="Town 3" id="town3" data-name="Cliffholt">
+    </map>
+
+    <div id="player"></div>
+    
+    <div id="trade-container">
+    </div>
+    <div id="message-container">
+    </div>
+    <div id="prices-container">
+      <table></table>
+    </div>
+  </div>
+
+
+  <script src="jquery-3.4.1.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
