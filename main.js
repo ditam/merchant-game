@@ -285,8 +285,10 @@ $(function() {
   $('#mute-button').click(function() {
     soundsOn = !soundsOn;
     if (soundsOn) {
+      $('#mute-button img').attr('src', 'assets/icons/sound.png');
       bgMusic.play();
     } else {
+      $('#mute-button img').attr('src', 'assets/icons/sound-muted.png');
       bgMusic.pause();
     }
   });

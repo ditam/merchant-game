@@ -181,3 +181,54 @@ area {
 #player img:hover {
   filter: drop-shadow(0 0 5px black);
 }
+
+#top-container {
+  width: 1024px;
+  background-color: #303030;
+  height: 50px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+#top-container #prices-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 150px;
+  font-size: 24px;
+  text-align: center;
+  background-color: brown;
+  outline: 2px solid #f8cf85;
+  cursor: pointer;
+}
+#top-container #prices-button:hover {
+  background-color: #a52a2ae8;
+}
+
+#top-container #mute-button {
+  position: absolute;
+  top: 7px;
+  left: 175px;
+  width: 40px;
+  text-align: center;
+  filter: invert(1);
+  cursor: pointer;
+}
+
+#top-container #inventory {
+  position: absolute;
+  top: 3px;
+  left: 260px;
+  line-height: 18px;
+  width: 600px;
+  font-size: 20px;
+  text-align: center;
+}
+
+#top-container #money-container {
+  position: absolute;
+  top: 10px;
+  left: 910px;
+  width: 100px;
+  font-size: 24px;
+}
