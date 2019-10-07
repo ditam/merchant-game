@@ -87,7 +87,6 @@ $(function() {
   // initialize audio assets
   const bgMusic = new Audio('assets/audio/music.mp3');
   const moneySound =  new Audio('assets/audio/money.mp3')
-  const discardSound =  new Audio('assets/audio/discard.mp3')
   
   // set bg music to loop
   bgMusic.addEventListener('ended', function() {
