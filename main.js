@@ -324,6 +324,8 @@ $(function() {
     player.css('left', getAreaPosition(town).left);
     // rot inventory according to distance travelled
     rot(inventory, products, Math.abs(towns[prevTown].distance - towns[currentTown].distance));
+    // NB rotting might trigger a victory by filling the fruit type quota
+    checkVictory(inventory, money);
     renderInventory(products, inventory, money);
     increaseStockpiles(towns, products, prices);
     renderPricesTable(towns, products, prices);
