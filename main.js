@@ -74,7 +74,7 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
   container.append(nameLabel);
   
   const table = $('<table>');
-  const header = $('<tr><th></th><th>Available</th><th>Price</th><th>Sell</th><th>Sell</th><th>Buy</th><th>Buy</th></tr>');
+  const header = $('<tr><th></th><th>Available</th><th>Price</th><th></th><th>Sell</th><th>Buy</th><th></th></tr>');
   table.append(header);
   
   // generate rows for fruits
@@ -363,7 +363,7 @@ $(function() {
       return;
     }
     
-    const count = ($(this).text() ==="all") ? inventory[productIndex] : 1;
+    const count = ($(this).text() === 'all') ? inventory[productIndex] : 1;
 
     inventory[productIndex] -= count;
     towns[currentTown].stockpiles[productIndex] += count;
@@ -393,15 +393,15 @@ $(function() {
       return;
     }
 
-    //if player selected "buy all", count is set to highest purchesable amount
-    const all = towns[currentTown].stockpiles[productIndex];
+    //if player selected "buy all, count is set to highest purchesable amount
+    const itemsAvailable = towns[currentTown].stockpiles[productIndex];
     const buttonText = $(this).text(); 
-    const count = ( buttonText != "all") ? 1
-                  : (money < price * all) ? Math.floor(money / price)
-                  : all;
+    const count = ( buttonText  !== 'all') ? 1
+                  : (money < price * itemsAvailable) ? Math.floor(money / price)
+                  : itemsAvailable;
     
     //shows bought amount in a message if player wanted to buy all, but couldn't
-    if (buttonText === "all" && count < all){
+    if (buttonText === 'all' && count < itemsAvailable){
       showMessage(`You've bought ${count} piece(s) of ${products[productIndex].name}.`);
     }
     inventory[productIndex] += count;
