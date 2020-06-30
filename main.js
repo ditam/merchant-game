@@ -74,7 +74,7 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
   container.append(nameLabel);
   
   const table = $('<table>');
-  const header = $('<tr><th></th><th>Available</th><th>Price</th><th>Sell</th><th>Buy</th><th>Sell</th><th>Buy</th></tr>');
+  const header = $('<tr><th></th><th>Available</th><th>Price</th><th>Sell</th><th>Sell</th><th>Buy</th><th>Buy</th></tr>');
   table.append(header);
   
   // generate rows for fruits
@@ -84,9 +84,9 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
     row.append($('<td>').append(icon));
     row.append($('<td>').text(town.stockpiles[i]));
     row.append($('<td>').text(pricesInTown[i]));
+    row.append($('<td>').append($('<button>').addClass('sell').text('all').data('index', i)));
     row.append($('<td>').append($('<button>').addClass('sell').text('-1').data('index', i)));
     row.append($('<td>').append($('<button>').addClass('buy').text('+1').data('index', i)));
-    row.append($('<td>').append($('<button>').addClass('sell').text('all').data('index', i)));
     row.append($('<td>').append($('<button>').addClass('buy').text('all').data('index', i)));
     table.append(row);
   }
@@ -363,16 +363,15 @@ $(function() {
       return;
     }
     
-    const iterator = ($(this).text() ==="all") ? inventory[productIndex] : 1;
+    const count = ($(this).text() ==="all") ? inventory[productIndex] : 1;
 
-    for( let i = 1; i <= iterator; i++){
-      inventory[productIndex] -= 1;
-      towns[currentTown].stockpiles[productIndex] += 1;
-      money += price;
-      if (soundsOn) {
-        moneySound.play();
-      }
+    inventory[productIndex] -= count;
+    towns[currentTown].stockpiles[productIndex] += count;
+    money += count * price;
+    if (soundsOn) {
+      moneySound.play();
     }
+
     renderInventory(products, inventory, money);
     renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
     checkVictory(inventory, money);
@@ -393,22 +392,24 @@ $(function() {
       showMessage('0 units in town - can not buy.');
       return;
     }
-    
-    const iterator = ($(this).text() ==="all") ? towns[currentTown].stockpiles[productIndex] : 1;
 
-    for( let i = 1; i <= iterator; i++){
-      
-      inventory[productIndex] += 1;
-      towns[currentTown].stockpiles[productIndex] -= 1;
-      money -= price;
-      if (soundsOn) {
-        moneySound.play();
-      }
-      //checks if playes has enough money to continue buying
-      if(money< price){
-        showMessage(`You could buy only ${i} piece(s) of ${products[productIndex].name}.`);
-        break;
-      }
+    //if player selected "buy all", count is set to highest purchesable amount
+    const all = towns[currentTown].stockpiles[productIndex];
+    const buttonText = $(this).text(); 
+    const count = ( buttonText != "all") ? 1
+                  : (money < price * all) ? Math.floor(money / price)
+                  : all;
+    
+    //shows bought amount in a message if player wanted to buy all, but couldn't
+    if (buttonText === "all" && count < all){
+      showMessage(`You've bought ${count} piece(s) of ${products[productIndex].name}.`);
+    }
+    inventory[productIndex] += count;
+    towns[currentTown].stockpiles[productIndex] -= count;
+    money -= price * count;
+  
+    if (soundsOn) {
+      moneySound.play();
     }
     renderInventory(products, inventory, money);
     renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
