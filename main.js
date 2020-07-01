@@ -397,7 +397,7 @@ $(function() {
     const buttonText = $(this).text(); 
 
     // if player selected "buy all", count is set to highest purchasable amount
-    const count = (buttonText  !== 'all') ? 1
+    const count = (buttonText !== 'all') ? 1
                   : (money < price * itemsAvailable) ? Math.floor(money / price)
                   : itemsAvailable;
     
