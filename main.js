@@ -74,7 +74,7 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
   container.append(nameLabel);
   
   const table = $('<table>');
-  const header = $('<tr><th></th><th>Available</th><th>Price</th><th>Sell</th><th>Buy</th></tr>');
+  const header = $('<tr><th></th><th>Available</th><th>Price</th><th></th><th>Sell</th><th>Buy</th><th></th></tr>');
   table.append(header);
   
   // generate rows for fruits
@@ -84,8 +84,10 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
     row.append($('<td>').append(icon));
     row.append($('<td>').text(town.stockpiles[i]));
     row.append($('<td>').text(pricesInTown[i]));
+    row.append($('<td>').append($('<button>').addClass('sell').text('all').data('index', i)));
     row.append($('<td>').append($('<button>').addClass('sell').text('-1').data('index', i)));
     row.append($('<td>').append($('<button>').addClass('buy').text('+1').data('index', i)));
+    row.append($('<td>').append($('<button>').addClass('buy').text('all').data('index', i)));
     table.append(row);
   }
   
@@ -360,12 +362,16 @@ $(function() {
       showMessage('0 units - can not sell.');
       return;
     }
-    inventory[productIndex] -= 1;
-    towns[currentTown].stockpiles[productIndex] += 1;
-    money += price;
+    
+    const count = ($(this).text() === 'all') ? inventory[productIndex] : 1;
+
+    inventory[productIndex] -= count;
+    towns[currentTown].stockpiles[productIndex] += count;
+    money += count * price;
     if (soundsOn) {
       moneySound.play();
     }
+
     renderInventory(products, inventory, money);
     renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
     checkVictory(inventory, money);
@@ -386,9 +392,23 @@ $(function() {
       showMessage('0 units in town - can not buy.');
       return;
     }
-    inventory[productIndex] += 1;
-    towns[currentTown].stockpiles[productIndex] -= 1;
-    money -= price;
+
+    const itemsAvailable = towns[currentTown].stockpiles[productIndex];
+    const buttonText = $(this).text(); 
+
+    // if player selected "buy all", count is set to highest purchasable amount
+    const count = (buttonText !== 'all') ? 1
+                  : (money < price * itemsAvailable) ? Math.floor(money / price)
+                  : itemsAvailable;
+    
+    // shows bought amount in a message if player wanted to buy all, but couldn't
+    if (buttonText === 'all' && count < itemsAvailable) {
+      showMessage(`You've bought ${count} piece(s) of ${products[productIndex].name}.`);
+    }
+    inventory[productIndex] += count;
+    towns[currentTown].stockpiles[productIndex] -= count;
+    money -= price * count;
+  
     if (soundsOn) {
       moneySound.play();
     }
