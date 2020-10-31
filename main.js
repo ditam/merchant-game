@@ -12,6 +12,20 @@ function getRandomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+(function generateTownLabels() {
+  var labelsOverlay = $('#labels-overlay');
+  $('area').each(function(i, area) {
+    var coords = area.coords.split(',').map(function(coord) {return parseInt(coord, 10);});
+    var townName = $(area).data('name');
+    var label = $('<div>').addClass('label').text(townName);
+    label.css({
+      left: coords[0],
+      top: coords[1]
+    });
+    labelsOverlay.append(label);
+  });
+})();
+
 function renderInventory(products, inventory, currentMoney) {
   const inventoryTable = $('#inventory');
   inventoryTable.empty();
@@ -161,6 +175,7 @@ $(function() {
   
   // shared state and references
   let soundsOn = false;
+  let labelsOn = false;
   const player = $('#player');
   let money = 0;
   const inventory = [0,0,0,0,0,0,0,0,0,0,0,0];
@@ -348,6 +363,17 @@ $(function() {
     }
   });
   
+  $('#labels-button').click(function() {
+    labelsOn = !labelsOn;
+    if (labelsOn) {
+      $('#labels-button img').attr('src', 'assets/icons/label-on.png');
+      $('#labels-overlay').show();
+    } else {
+      $('#labels-button img').attr('src', 'assets/icons/label-off.png');
+      $('#labels-overlay').hide();
+    }
+  });
+
   // Bring up trade dialog when player is clicked
   player.click(function() {
     renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
