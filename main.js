@@ -16,13 +16,13 @@ function getRandomIntFromInterval(min, max) { // min and max included
   var labelsOverlay = $('#labels-overlay');
   $('area').each(function(i, area) {
     var coords = area.coords.split(',').map(function(coord) {return parseInt(coord, 10);});
-  var townName = $(area).data('name');
-  var label = $('<div>').addClass('label').text(townName);
-  label.css({
-    left: coords[0],
-    top: coords[1]
-  });
-  labelsOverlay.append(label);
+    var townName = $(area).data('name');
+    var label = $('<div>').addClass('label').text(townName);
+    label.css({
+      left: coords[0],
+      top: coords[1]
+    });
+    labelsOverlay.append(label);
   });
 })();
 
