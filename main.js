@@ -45,7 +45,7 @@ function renderInventory(products, inventory, currentMoney) {
 function renderPricesTable(towns, products, prices) {
   const table = $('#prices-container table');
   table.empty();
-  
+
   // add header row
   const headerRow = $('<tr>');
   headerRow.append($('<th>'));
@@ -57,12 +57,12 @@ function renderPricesTable(towns, products, prices) {
     label.css('background-position', '0');
     label.css('padding-left', '25px');
     label.css('margin-left', '-10px');
-    
+
     const headerCell = $('<th>').append(label);
     headerRow.append(headerCell);
   }
   table.append(headerRow);
-  
+
   // generate town rows
   for (name in towns) {
     const row = $('<tr>');
@@ -78,19 +78,19 @@ function renderPricesTable(towns, products, prices) {
 function renderTradeDialog(townName, town, products, pricesInTown) {
   const container = $('#trade-container');
   container.empty();
-  
+
   const icon = $('<img>').attr('src', 'assets/icons/town' + town.type + '.png');
   container.append(icon);
-  
+
   const title = $('<div>').text('Welcome to ');
   container.append(title);
   const nameLabel = $('<div>').text(townName).addClass('town-name');
   container.append(nameLabel);
-  
+
   const table = $('<table>');
   const header = $('<tr><th></th><th>Available</th><th>Price</th><th></th><th>Sell</th><th>Buy</th><th></th></tr>');
   table.append(header);
-  
+
   // generate rows for fruits
   for (let i=0; i<products.length; i++) {
     const row = $('<tr>');
@@ -104,7 +104,7 @@ function renderTradeDialog(townName, town, products, pricesInTown) {
     row.append($('<td>').append($('<button>').addClass('buy').text('all').data('index', i)));
     table.append(row);
   }
-  
+
   container.append(table);
 
   const footer = $('<div>').addClass('footer').text('Leave town');
@@ -166,13 +166,13 @@ $(function() {
   // initialize audio assets
   const bgMusic = new Audio('assets/audio/music.mp3');
   const moneySound =  new Audio('assets/audio/money.mp3')
-  
+
   // set bg music to loop
   bgMusic.addEventListener('ended', function() {
     this.currentTime = 0;
     this.play();
   }, false);
-  
+
   // shared state and references
   let soundsOn = false;
   let labelsOn = false;
@@ -182,7 +182,7 @@ $(function() {
   const inventory_size = 5;
   function inventoryIsFull() { return inventory.reduce(function(sum, v) {return sum+v;}, 0) >= inventory_size }
   let currentTown = 'Edgemoor';
-  
+
   const towns = {
     Edgemoor: {
       distance: 0,
@@ -225,7 +225,7 @@ $(function() {
       stockpiles: [50,0,50,0,50,0,10,0,10,0,10,0]
     }
   };
-  
+
   const products = [
     {
       name: 'apples',
@@ -312,7 +312,7 @@ $(function() {
       maxPrice: 50
     },
   ];
-  
+
   const prices = {
     // prices are listed in order 1a, 1b, 2a, 2b etc
     Edgemoor:  [2,1,3,1,4,2,10,4,20,8,40,20],
@@ -324,11 +324,11 @@ $(function() {
     Sagewynne: [2,0,3,1,4,2,10,4,20,8,65,20],
     Ostmont:   [2,0,3,1,4,2,10,4,20,8,70,20]
   };
-  
+
   // render initial inventory and prices table
   renderInventory(products, inventory, money);
   renderPricesTable(towns, products, prices);
-  
+
   // connect event handlers
   $('area').click(function() {
     const town = $(this);
@@ -347,11 +347,11 @@ $(function() {
     increaseStockpiles(towns, products, prices);
     renderPricesTable(towns, products, prices);
   });
-  
+
   $('#prices-button').click(function() {
     $('#prices-container').toggleClass('visible');
   });
-  
+
   $('#mute-button').click(function() {
     soundsOn = !soundsOn;
     if (soundsOn) {
@@ -362,7 +362,7 @@ $(function() {
       bgMusic.pause();
     }
   });
-  
+
   $('#labels-button').click(function() {
     labelsOn = !labelsOn;
     if (labelsOn) {
@@ -379,7 +379,7 @@ $(function() {
     renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
     $('#trade-container').addClass('visible');
   });
-  
+
   // Connect delegated handlers for buy and sell actions
   $('#trade-container').on('click', 'button.sell', function() {
     const productIndex = $(this).data('index');
@@ -388,7 +388,7 @@ $(function() {
       showMessage('0 units - can not sell.');
       return;
     }
-    
+
     const count = ($(this).text() === 'all') ? inventory[productIndex] : 1;
 
     inventory[productIndex] -= count;
@@ -420,13 +420,13 @@ $(function() {
     }
 
     const itemsAvailable = towns[currentTown].stockpiles[productIndex];
-    const buttonText = $(this).text(); 
+    const buttonText = $(this).text();
 
     // if player selected "buy all", count is set to highest purchasable amount
     const count = (buttonText !== 'all') ? 1
                   : (money < price * itemsAvailable) ? Math.floor(money / price)
                   : itemsAvailable;
-    
+
     // shows bought amount in a message if player wanted to buy all, but couldn't
     if (buttonText === 'all' && count < itemsAvailable) {
       showMessage(`You've bought ${count} piece(s) of ${products[productIndex].name}.`);
@@ -434,7 +434,7 @@ $(function() {
     inventory[productIndex] += count;
     towns[currentTown].stockpiles[productIndex] -= count;
     money -= price * count;
-  
+
     if (soundsOn) {
       moneySound.play();
     }
@@ -442,7 +442,7 @@ $(function() {
     renderTradeDialog(currentTown, towns[currentTown], products, prices[currentTown]);
     checkVictory(inventory, money);
   });
-  
+
   // Hide dialogs on clicking
   $('#prices-container').click(function() {
     $('#prices-container').removeClass('visible');
@@ -453,7 +453,7 @@ $(function() {
   $('#trade-container').on('click', '.footer', function() {
     $('#trade-container').removeClass('visible');
   });
-  
+
   // display opening message
-  showMessage('Welcome! I heard you want to become a trader, but you don\'t have any money or anything to sell! Well... good luck, kiddo! I hear in Lorevale they are throwing away rotten apples, maybe you can become a rotten apple salesman! Ha-ha.', 'When in town, click on your banner to trade.');
+  showMessage('Welcome! I heard you want to become a trader, but you don\'t have any money or anything to sell! Well... good luck, kiddo! I hear in Lorvale they are throwing away rotten apples, maybe you can become a rotten apple salesman! Ha-ha.', 'When in town, click on your banner to trade.');
 });
